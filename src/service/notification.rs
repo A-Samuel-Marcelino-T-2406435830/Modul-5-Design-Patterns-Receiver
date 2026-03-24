@@ -9,7 +9,7 @@ use rocket::tokio;
 use bambangshop_receiver::{APP_CONFIG, REQWEST_CLIENT, Result, compose_error_response};
 use crate::controller::notification;
 use crate::model::notification::Notification;
-use crate::model::subscriber::SubscriberRequest;
+use crate::model::subscriber::{self, SubscriberRequest};
 use crate::repository::notification::NotificationRepository;
 
 pub struct NotificationService;
@@ -92,5 +92,10 @@ impl NotificationService {
                 e.to_string()
             ))
         }
+    }
+
+    pub fn receive_notification(payload: Notification) -> Result<Notification> {
+        let subscriber_result: Notification = NotificationRepository::add(payload);
+        return Ok(subscriber_result);
     }
 }
